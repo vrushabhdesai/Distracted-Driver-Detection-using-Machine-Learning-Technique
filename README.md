@@ -7,61 +7,59 @@ Most people tend to follow safety guidelines while driving, yet there is a conti
 
 ### Problem Description
 The goal of this project is to detect if the car driver is driving safe or performing any activity that might result in a accident or any harm to others. The dataset contains various driver images, each taken in a car with a driver performing some activity in the car. We are determined to classify the likelihood of what the driver is doing in each image. We aim to use various Machine Learning techniques to classify driver’s activities and identify a model that yields the highest accuracy. The model is trained on image data that are the images of driver's actions in the car. This is a multi-class classification problem, with a total of 10 classes including a class of ‘safe driving’. The image below gives the 10 classes:
-# ![Classes](Classes.png)
 
-Below are the 10 classes to classify:
-
-c0: safe driving
-
-c1: texting - right
-
-c2: talking on the phone - right
-
-c3: texting - left
-
-c4: talking on the phone - left
-
-c5: operating the radio
-
-c6: drinking
-
-c7: reaching behind
-
-c8: hair and makeup
-
-c9: talking to passenger
+<img src="Images/Classes.png" >
 
 ### Dataset
-Our [`Dataset`] is from a 2016 Kaggle competition with a huge collection of 22,500 640x480RGB images.
+Our [`Dataset`] is from a 2016 Kaggle competition with a collection of 22,500 640x480 RGB labelled images as training data and 70,000 unlabelled images as test data. 
 
 ## Implementation
 
 ### Pre-processing
-We pre-processed these  images by resizing them to 64X64 RGB and extract each image’s pixels into a column vector of size 64X64X3. We then combined the vectors for each of the data instances and created a matrix as the input data to our models.
+Image classification is best done by extracting features. So we pre-processed these images by resizing them to 64X64 RGB and extract 
+various features using:
 
-#### HOG Feature Descriptor
-1.  Count occurrences of gradient orientation in localized portions
+• Pixel
 
-2.  Stacked HOG gradient features to generate a feature matrix
+• HOG Feature Descriptor 
 
-# ![Classes](HOG.png)
+• Sobel Edge Descriptor
 
-#### Sobel Edge Descriptor
-1.  Obtained edges using Sobel gradient in X and Y direction
+• Clustering
 
-2.  Stacked object edges as feature vector
+#### 1. Pixels:
+Each image’s pixels is flattened into a column vector of size 64X64X3. We then combined the vectors for each of the data instances and created a matrix as the input data to our models.
 
-# ![Image](Sobel.png)
+<img src="Images/pixel.JPG">
+
+#### 2. HOG Feature Descriptor:
+Count occurrences of gradient orientation in localized portions. Stacked all the HOG gradient features to generate a feature matrix. We then combined the vectors for each of the data instances and created a matrix as the input data to our models.
+
+<img src="Images/HOG.png">
+
+#### 3. Sobel Edge Descriptor:
+Obtained edges using Sobel gradient in X and Y direction. Then computed the resultant gradient. Stacked all the object edges as feature vector then combined the vectors for each of the data instances and created a matrix
+
+<img src="Images/Sobel%E2%80%8B.png">
+
+#### 4. K Means Clustering:
+
+Resize image to 64x64 RGB image. To reduce the number of features we decided to create a clusters. Hence, implement K means clustering on each image with K=3, middle image (in our case). Stack cluster fe atures to create feature matrix.
+
+<img src="Images/clustering.JPG">
 
 ### ML Algorithms
 
-Below listed are the Machine Learning algorithms we experimented to predict the classes
+Below listed are the Machine Learning algorithms we experimented to predict the classes:
 
 1.  Decision Trees
 2.  Support Vector Machines (SVM)
 3.  Random Forests
 4.  2-Layered Neural Networks
-5.  VGG16 Convolutional Neural Networks (CNN)
+5.  Convolutional Neural Networks (CNN)
+6.  VGG16 Architecture
+
+We split labelled dataset into 75% Train, 15% Validation and 10% Test data to evaluate our model. We were able to achieve an average accuracy of ~ 94%. 
 
 ### Environmental Requirements
 
@@ -75,8 +73,12 @@ Below listed are the Machine Learning algorithms we experimented to predict the 
     - MatplotLib
     - Glob
  3. Jupyter notebook to execute .ipynb files
+ 
+### Conclusion
 
-## Applications
+Feature extraction is an important step in any machine learning problem. Selection of model play a crucial role. Good features are needed for Dimensionality Reduction. Generalized accuracy depends on distribution of real world data in comparison to test data. The best results were obtained using a **CNN with VGG16 architecture**
+
+### Applications
 
 Our models are applicable to the following applications and many more
 1.  If installed in a car, it can alarm/warn if the driver is distracted.
